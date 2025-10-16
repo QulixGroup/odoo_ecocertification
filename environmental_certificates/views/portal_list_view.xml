@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="portal_listed_certificates" name="My Certificates">
+        <t t-call="portal.portal_layout">
+            <t t-set="breadcrumbs_searchbar" t-value="True"/>
+
+            <t t-call="portal.portal_searchbar">
+                <t t-set="title">My Certificates</t>
+            </t>
+
+            <div class="clearfix">
+                <a t-attf-href="/certificates/new"
+                   class="btn btn-primary">
+                    Add Certificate
+                    <span class="fa ml-1"/>
+                </a>
+            </div>
+
+            <div class="row mt-4">
+                <!-- Certificates List -->
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5>My Certificates</h5>
+                        </div>
+                        <div class="card-body">
+                            <!-- Success/Error Messages -->
+                            <t t-if="error_message">
+                                <div class="alert alert-danger alert-dismissible" role="alert">
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                    <t t-esc="error_message"/>
+                                </div>
+                            </t>
+                            <t t-if="success_message">
+                                <div class="alert alert-success alert-dismissible" role="alert">
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                    <t t-esc="success_message"/>
+                                </div>
+                            </t>
+                            <div class="table-responsive">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Certificate Type</th>
+                                            <th>Issue Date</th>
+                                            <th>Status</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <t t-foreach="certificates" t-as="certificate">
+                                            <tr>
+                                                <td>
+                                                    <t t-esc="certificate.type_id.name"/>
+                                                </td>
+                                                <td>
+                                                    <t t-if="certificate.issue_date">
+                                                        <t t-esc="certificate.issue_date"/>
+                                                    </t>
+                                                    <span t-else="" class="text-muted">-</span>
+                                                </td>
+                                                <td>
+                                                    <t t-if="certificate.status">
+                                                        <t t-if="certificate.status == 'valid'">
+                                                            <span class="badge text-bg-success">Valid</span>
+                                                        </t>
+                                                        <t t-elif="certificate.status == 'expiring'">
+                                                            <span class="badge text-bg-warning">Expiring</span>
+                                                        </t>
+                                                        <t t-else="">
+                                                            <span class="badge text-bg-danger">Expired</span>
+                                                        </t>
+                                                    </t>
+                                                    <span t-else="" class="badge text-bg-secondary">No expiry</span>
+                                                </td>
+                                                <td>
+                                                    <t t-if="certificate.document">
+                                                        <a t-attf-href="/certificates/#{certificate.id}/download"
+                                                            class="btn btn-sm btn-outline-primary me-2">
+                                                            <i class="fa fa-download"></i>
+                                                            Download
+                                                        </a>
+                                                        <br class="d-block d-md-none"/>
+                                                        <a t-attf-href="/certificates/#{certificate.id}"
+                                                            class="btn btn-sm btn-primary me-2">
+                                                            <i class="fa fa-upload"></i>
+                                                            Renew Certificate
+                                                        </a>
+                                                        <br class="d-block d-md-none"/>
+                                                        <form method="post"
+                                                                action="/certificates/replace"
+                                                                enctype="multipart/form-data"
+                                                                class="d-inline-block mt-1">
+                                                            <input type="hidden" name="csrf_token"
+                                                                    t-att-value="request.csrf_token()"/>
+                                                            <input type="hidden" name="certificate_id"
+                                                                    t-att-value="certificate.id"/>
+                                                            <input type="file" name="replace_file"
+                                                                    accept=".pdf,.jpeg,.png"
+                                                                    style="display: none;"
+                                                                    t-attf-id="replace_file_#{certificate.id}"
+                                                                    onchange="this.form.submit()"/>
+                                                            <label t-attf-for="replace_file_#{certificate.id}"
+                                                                    class="btn btn-sm btn-warning mb-0">
+                                                                <i class="fa fa-exchange"></i>
+                                                                Replace file
+                                                            </label>
+                                                        </form>
+                                                    </t>
+                                                </td>
+                                            </tr>
+                                        </t>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+</odoo>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Wizard Form View -->
+    <record id="certificate_wizard_form_view" model="ir.ui.view">
+        <field name="name">certificate.wizard.view.form</field>
+        <field name="model">certificate.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Create Certificate">
+                <sheet>
+                    <group>
+                        <field name="type_id"/>
+                        <field name="category_id"/>
+                        <field name="issue_date"/>
+                        <field name="expiration_date"/>
+                        <field name="document" filename="document_name"/>
+                    </group>
+                </sheet>
+                <footer>
+                    <button string="Save &amp; Close"
+                            class="btn-primary"
+                            type="object"
+                            name="action_save_or_update_certificate"/>
+                    <button string="Discard"
+                            class="btn-secondary"
+                            special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Window Action for the Wizard -->
+    <record id="action_certificate_wizard" model="ir.actions.act_window">
+        <field name="name">Add Certificate</field>
+        <field name="res_model">certificate.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="context">{'default_producer_id': active_id}</field>
+    </record>
+</odoo>

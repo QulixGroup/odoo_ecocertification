@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Certificate Management Groups -->
+        <record id="module_category_certificate" model="ir.module.category">
+            <field name="name">Certificate Management</field>
+            <field name="description">Manage certificates and related settings</field>
+            <field name="sequence">10</field>
+        </record>
+
+        <record model="res.groups" id="group_certificate_admin">
+            <field name="name">Certificate Administrator</field>
+            <field name="category_id" ref="base.module_category_administration"/>
+            <field name="comment">Full access to certificate management including types configuration</field>
+        </record>
+
+        <record model="res.groups" id="group_purchase_manager">
+            <field name="name">Purchase Manager</field>
+            <field name="category_id" ref="environmental_certificates.module_category_certificate"/>
+            <field name="comment">Can view, add and edit certificates but cannot delete or configure types</field>
+        </record>
+
+        <record model="res.groups" id="group_supplier_portal">
+            <field name="name">Supplier</field>
+            <field name="category_id" ref="base.module_category_website"/>
+            <field name="comment">Suppliers can add, edit and view their certificates</field>
+            <field name="implied_ids" eval="[(4, ref('base.group_portal'))]"/>
+        </record>
+
+        <record id="rule_portal_certificate" model="ir.rule">
+            <field name="name">Portal: Access Own Certificates</field>
+            <field name="model_id" ref="environmental_certificates.model_environment_certificate"/>
+            <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
+            <field name="domain_force">[("producer_id", "=", user.partner_id.id)]</field>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+
+    </data>
+</odoo>

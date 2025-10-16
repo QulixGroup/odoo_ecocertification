@@ -1,0 +1,23 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<odoo>
+    <record id="ir_cron_environment_certificate_check_validity" model="ir.cron">
+        <field name="name">Environmental Certificates: validity check</field>
+        <field name="model_id" ref="model_environment_certificate"/>
+        <field name="state">code</field>
+        <field name="code">model.check_validity()</field>
+        <field name="user_id" ref="base.user_root" />
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+    </record>
+
+    <record id="ir_cron_environment_certificate_notification" model="ir.cron">
+        <field name="name">Environmental Certificates: status notifications</field>
+        <field name="model_id" ref="model_environment_certificate"/>
+        <field name="state">code</field>
+        <field name="code">model.send_status_notifications()</field>
+        <field name="user_id" ref="base.user_root" />
+        <field name="interval_number">7</field>
+        <field name="interval_type">days</field>
+    </record>
+
+</odoo>

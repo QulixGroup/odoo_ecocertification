@@ -1,0 +1,48 @@
+<odoo>
+    <!-- Certificate Status Notification Template -->
+    <template id="email_template_certificate_status">
+        <h3 t-if="partner.commercial_company_name">Dear <t t-out="partner.commercial_company_name"/>,</h3>
+        <h3 t-elif="partner.company_name">Dear <t t-out="partner.company_name"/>,</h3>
+        <h3 t-else="">Dear Partner,</h3>
+        <div t-if="no_sertificates">
+            <p>We notice that you haven't uploaded any certificates yet.</p>
+            <p>Please upload your certificates through the customer portal</p>
+        </div>
+        <div t-if="expired_certificates">
+            <t t-set="expired_count" t-value="len(expired_certificates)"/>
+            <p><t t-out="expired_count"/> of your certificates<t t-if="expired_count==1"> has</t><t t-else=""> have</t> expired:</p>
+            <t t-foreach="expired_certificates" t-as="certificate">
+                <p>Certificate <t t-out="certificate.document_name"/> expired on <t t-out="certificate.expiration_date"/>.</p>
+            </t>
+            <p>Please upload renewed certificate<t t-if="expired_count>1">s</t> immediately</p>
+        </div>
+        <div t-if="expiring_certificates">
+            <t t-set="expiring_count" t-value="len(expiring_certificates)"/>
+            <p><t t-out="expiring_count"/> of your certificates<t t-if="expiring_count==1"> is</t><t t-else=""> are</t> expiring:</p>
+            <t t-foreach="expiring_certificates" t-as="certificate">
+                <p>Certificate <t t-out="certificate.document_name"/> will expire on <t t-out="certificate.expiration_date"/>.</p>
+            </t>
+            <p>Please renew and upload the updated certificate<t t-if="expiring_count>1">s</t></p>
+        </div>
+    </template>
+
+    <!-- New Certificate Notification Template -->
+    <template id="email_template_new_certificate_notification">
+        <h3 t-if="partner.commercial_company_name">Supplier <t t-out="partner.commercial_company_name"/>,</h3>
+        <h3 t-elif="partner.company_name">Supplier <t t-out="partner.company_name"/>,</h3>
+        <h3 t-else="">Supplier No Name,</h3>
+        <div>
+            <p>Have just created '<t t-out="document_type"/>' certificate. Document name: <t t-out="document_name"/>.</p>
+        </div>
+    </template>
+
+    <!-- Existing Certificate Modification Notification Template -->
+    <template id="email_template_updated_certificate_notification">
+        <h3 t-if="partner.commercial_company_name">Supplier <t t-out="partner.commercial_company_name"/>,</h3>
+        <h3 t-elif="partner.company_name">Supplier <t t-out="partner.company_name"/>,</h3>
+        <h3 t-else="">Supplier No Name,</h3>
+        <div>
+            <p>Have just modified '<t t-out="document_type"/>' certificate. Document name: <t t-out="document_name"/>.</p>
+        </div>
+    </template>
+</odoo>

@@ -1,0 +1,6 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<odoo>
+  <record id="initial_certificate_type_1" model="environment.certificate.type">
+    <field name="name">Producers' certificates</field>
+  </record>
+</odoo>

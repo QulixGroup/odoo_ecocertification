@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="portal_my_home_sale" name="Certificates" customize_show="True" inherit_id="portal.portal_my_home" priority="20">
+        <xpath expr="//div[hasclass('o_portal_docs')]" position="before">
+            <t t-set="portal_client_category_enable" t-value="True"/>
+        </xpath>
+        <div id="portal_client_category" position="inside">
+            <t t-call="portal.portal_docs_entry">
+                <t t-set="icon" t-value="'/environmental_certificates/static/img/certificate.svg'"/>
+                <t t-set="title">Certificates</t>
+                <t t-set="url" t-value="'/certificates'"/>
+                <t t-set="text">Follow the status or update your certificates</t>
+                <t t-set="placeholder_count" t-value="'certificate_count'"/>
+            </t>
+        </div>
+    </template>
+
+    <template id="portal_certificate_form" name="My Certificates">
+        <t t-call="portal.portal_layout">
+            <t t-set="breadcrumbs_searchbar" t-value="True"/>
+
+            <t t-call="portal.portal_searchbar">
+                <t t-set="title">My Certificates</t>
+            </t>
+
+            <div class="row mt-4">
+                <!-- Upload Form -->
+                <div class="col-12 mb-4">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5>Upload Certificate</h5>
+                        </div>
+                        <div class="card-body">
+                            <!-- Success/Error Messages -->
+                            <t t-if="error_message">
+                                <div class="alert alert-danger alert-dismissible" role="alert">
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                    <t t-esc="error_message"/>
+                                </div>
+                            </t>
+                            <t t-if="success_message">
+                                <div class="alert alert-success alert-dismissible" role="alert">
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                    <t t-esc="success_message"/>
+                                </div>
+                            </t>
+                            <form t-att-action="'/certificates/new' if not form_data or not form_data.get('certificate_id', '') else '/certificates/%s/renew' % form_data.get('certificate_id', '')"
+                                  method="post" enctype="multipart/form-data">
+                                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="col-form-label" for="certificate_type">
+                                            Certificate Type
+                                        </label>
+                                        <div class="input-group">
+                                            <select name="certificate_type"
+                                                    id="certificate_type"
+                                                    class="form-control">
+                                                <option value="">Select Certificate Type</option>
+                                                <t t-foreach="certificate_types or []" t-as="cert_type">
+                                                    <option t-att-value="cert_type.id"
+                                                            t-esc="cert_type.name"
+                                                            t-att-selected="'selected' if form_data and str(cert_type.id) == form_data.get('certificate_type') else None"/>
+                                                </t>
+                                            </select>
+                                        </div>
+
+                                        <label class="col-form-label" for="certificate_category">
+                                            Certificate Category
+                                        </label>
+                                        <div class="input-group">
+                                            <select name="certificate_category"
+                                                    id="certificate_category"
+                                                    class="form-control">
+                                                <option value="">Select Certificate Category</option>
+                                                <t t-foreach="certificate_categories or []" t-as="cert_cat">
+                                                    <option t-att-value="cert_cat.id"
+                                                            t-esc="cert_cat.name"
+                                                            t-att-selected="'selected' if form_data and str(cert_cat.id) == form_data.get('certificate_category') else None"/>
+                                                </t>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6 mb-3">
+                                        <label class="col-form-label" for="certificate_file">
+                                            Certificate File
+                                        </label>
+                                        <input type="file"
+                                               name="certificate_file"
+                                               class="form-control"
+                                               required="required"
+                                               accept=".pdf,.jpeg,.png"/>
+                                    </div>
+
+                                    <div class="col-md-6 mb-3">
+                                        <label class="col-form-label" for="issue_date">
+                                            Issue Date
+                                        </label>
+                                        <input type="date"
+                                               id="issue_date"
+                                               class="form-control"
+                                               name="issue_date"
+                                               required="required"
+                                               t-att-max="datetime.date.today().strftime('%Y-%m-%d')"
+                                               t-att-value="form_data.get('issue_date', '') if form_data else ''"/>
+                                        <small class="form-text text-muted">Cannot be later than today</small>
+                                    </div>
+
+                                    <div class="col-md-6 mb-3">
+                                        <label class="col-form-label" for="expiration_date">
+                                            Expiration Date
+                                        </label>
+                                        <input type="date"
+                                               id="expiration_date"
+                                               class="form-control"
+                                               name="expiration_date"
+                                               t-att-min="(datetime.date.today() + datetime.timedelta(hours=24)).strftime('%Y-%m-%d')"
+                                               t-att-value="form_data.get('expiration_date', '') if form_data else ''"/>
+                                        <small class="form-text text-muted">Must be strictly after issue date
+                                        </small>
+                                    </div>
+                                </div>
+
+                                <div class="clearfix">
+                                    <button type="submit" class="btn btn-primary">
+                                        Upload Certificate
+                                        <span class="fa fa-upload ml-1"/>
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+</odoo>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Certificate Type Action -->
+    <record id="environment_certificate_categories_action"
+            model="ir.actions.act_window">
+        <field name="name">Certificate Categories</field>
+        <field name="res_model">environment.category</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="environment_certificate_category_form_view" model="ir.ui.view">
+        <field name="name">environment.category.form</field>
+        <field name="model">environment.category</field>
+        <field name="arch" type="xml">
+            <form string="Certificate Category">
+                <sheet>
+                    <group>
+                        <label for="name" string="Category"/>
+                        <h3><field name="name" placeholder="e.g. Lamps"/></h3>
+                    </group>
+                    <group name="first" col="2">
+                        <field name="parent_id" class="oe_inline"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <menuitem id="res_partner_certificates_categories_menu" name="Certificate Categories"
+        action="environmental_certificates.environment_certificate_categories_action"
+        parent="contacts.res_partner_menu_config"
+        sequence="5"/>
+</odoo>
